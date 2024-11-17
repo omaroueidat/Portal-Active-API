@@ -5,6 +5,7 @@ using Persistence;
 using Domain;
 using MediatR;
 using Application.Activities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -14,23 +15,29 @@ namespace API.Controllers
     {
 
         [HttpGet] // api/activities
-        public async Task<ActionResult<List<Activity>>> GetActivities()
+        public async Task<IActionResult> GetActivities()
         {
-            return await Mediator.Send(new List.Query());
+            var result =  await Mediator.Send(new List.Query());
+
+            return HandleResult(result);
         }
 
+        [Authorize]
         [HttpGet("{Id:Guid}")]
-        public async Task<ActionResult<Activity>> GetActivity(Guid Id)
+        public async Task<IActionResult> GetActivity(Guid Id)
         {
-            return await Mediator.Send(new Details.Query { Id = Id });
+            var result = await Mediator.Send(new Details.Query { Id = Id });
+
+            return HandleResult(result);
+
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity)
         {
-            await Mediator.Send(new CreateActivity.Command { Activity = activity });
+            var result = await Mediator.Send(new CreateActivity.Command { Activity = activity });
 
-            return Ok();
+            return HandleResult(result);
         }
 
         [HttpPut("{id}")]
