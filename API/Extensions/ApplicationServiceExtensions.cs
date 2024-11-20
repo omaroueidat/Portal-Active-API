@@ -1,7 +1,9 @@
 ﻿using Application.Activities;
 using Application.Core;
+using Application.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Infrastructure.Secuirity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -41,6 +43,12 @@ namespace API.Extensions
             // Adding the validation services to the DI container
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<CreateActivity>();
+
+            // Adding the service for the HttpContext Accessor
+            services.AddHttpContextAccessor();
+
+            // Add the services for the UserAccessor
+            services.AddScoped<IUserAccessor, UserAccessor>();
 
             return services;
         }

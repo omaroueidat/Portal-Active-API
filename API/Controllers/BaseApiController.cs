@@ -15,6 +15,11 @@ namespace API.Controllers
 
         protected IActionResult HandleResult<T>(Result<T> result)
         {
+            if (result is null)
+            {
+                return BadRequest();
+            }
+
             if (result.IsSuccess && result.Value != null)
                 return Ok(result.Value);
 

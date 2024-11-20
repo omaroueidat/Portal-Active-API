@@ -40,21 +40,33 @@ namespace API.Controllers
             return HandleResult(result);
         }
 
+        [Authorize(Policy = "IsActivityHost")] // Adding the Policy to the Edit Controller where we want to use it
         [HttpPut("{id}")]
         public async Task<IActionResult> EditActivity(Guid id, Activity activity)
         {
+            // Add the Id to the activity object
             activity.Id = id;
+
+            // Send a request to the mediator to edit the activity
             await Mediator.Send(new EditActivity.Command { Activity = activity });
 
             return Ok();
         }
 
+        [Authorize(Policy = "IsActivityHost")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteActivity(Guid id)
         {
+            // Send a request to the Mediator to handle the delete of the activty
             await Mediator.Send(new DeleteActivity.Command { Id = id });
 
             return Ok();
+        }
+
+        [HttpPost("{id}/attend")]
+        public async Task<IActionResult> Attend(Guid id)
+        {
+            return HandleResult(await Mediator.Send(new UpdateAttendace.Command { Id = id }));
         }
     }
 }
