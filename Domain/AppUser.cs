@@ -11,6 +11,11 @@ namespace Domain
     {
         public string DisplayName { get; set; }
         public string Bio { get; set; }
+
+        // For Reference
         public ICollection<ActivityAttendee> Activities { get; set; }
+
+        // User have many images
+        public ICollection<Photo> Photos { get; set; }
     }
 }
