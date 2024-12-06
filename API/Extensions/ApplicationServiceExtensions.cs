@@ -3,6 +3,7 @@ using Application.Core;
 using Application.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Infrastructure.Photos;
 using Infrastructure.Secuirity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -49,6 +50,12 @@ namespace API.Extensions
 
             // Add the services for the UserAccessor
             services.AddScoped<IUserAccessor, UserAccessor>();
+
+            // Add the configiration to the class from the config file
+            services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+
+            // Add the services of the Photo Upload
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
 
             return services;
         }
