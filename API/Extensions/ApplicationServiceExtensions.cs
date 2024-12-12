@@ -30,8 +30,10 @@ namespace API.Extensions
             {
                 opt.AddPolicy("CorsPolicy", policy =>
                 {
-                    policy.AllowAnyHeader()
+                    policy
                         .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
                         .WithOrigins("http://localhost:3000");
                 });
             });
@@ -56,6 +58,9 @@ namespace API.Extensions
 
             // Add the services of the Photo Upload
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+
+            // Add the service for SignalR
+            services.AddSignalR();
 
             return services;
         }

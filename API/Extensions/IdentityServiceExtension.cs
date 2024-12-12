@@ -37,6 +37,26 @@ namespace API.Extensions
                         ValidateIssuer = false,
                         ValidateAudience = false,
                     };
+
+                    opt.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            // Get the token from the query string
+                            var accessToken = context.Request.Query["access_token"];
+
+                            // Get the path from the request
+                            var path = context.HttpContext.Request.Path;
+
+                            // Check if the token exist and the path is to the chat hub
+                            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chat")))
+                            {
+                                // Add the Token to the current context
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             // Add Authorization to the API

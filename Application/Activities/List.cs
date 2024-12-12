@@ -32,6 +32,7 @@ namespace Application.Activities
                 var activities =  await _context.Activities
                     .Include(a => a.Attendees)           
                     .ThenInclude(aa => aa.AppUser)
+                    .ThenInclude(au => au.Photos)
                     .ToListAsync();
 
                 var activitiesToReturn = _mapper.Map<List<ActivityDto>>(activities);

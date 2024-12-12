@@ -1,4 +1,5 @@
 ﻿using Application.Activities;
+using Application.Comments;
 using AutoMapper;
 using Domain;
 using System;
@@ -32,6 +33,13 @@ namespace Application.Core
             // We will get the main Image from the User and add it to the Profile
             CreateMap<AppUser, Profiles.Profile>()
                 .ForMember(d => d.Image, o => o.MapFrom(s => s.Photos.FirstOrDefault(p => p.IsMain).Url));
+
+            // Mapping from Comment to CommentDto
+            // Taking the Display Name, UserName and Image from the AppUser one-to-one relation we have
+            CreateMap<Comment, CommentDto>()
+                .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.Author.DisplayName))
+                .ForMember(d => d.Username, o => o.MapFrom(s => s.Author.UserName))
+                .ForMember(d => d.Image, o => o.MapFrom(s => s.Author.Photos.FirstOrDefault(p => p.IsMain).Url));
         }
     }
 }
