@@ -14,6 +14,9 @@ namespace Application.Core
     {
         public MappingProfiles() 
         {
+            // Parameters that are recived with the Mapper configirtation provider
+            string currentUsername = null;
+
             CreateMap<Activity, Activity>();
 
             // Mapping from Activity to ActivityDto
@@ -25,14 +28,20 @@ namespace Application.Core
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.AppUser.DisplayName))
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.AppUser.UserName))
                 .ForMember(d => d.Bio, o => o.MapFrom(s => s.AppUser.Bio))
-                .ForMember(d => d.Image, o => o.MapFrom(s => s.AppUser.Photos.FirstOrDefault(p => p.IsMain).Url));
+                .ForMember(d => d.Image, o => o.MapFrom(s => s.AppUser.Photos.FirstOrDefault(p => p.IsMain).Url))
+                .ForMember(d => d.FollowersCount, o => o.MapFrom(s => s.AppUser.Followers.Count)) // Followers Count
+                .ForMember(d => d.FollowingCount, o => o.MapFrom(s => s.AppUser.Followings.Count)) // Following Count
+                .ForMember(d => d.Following, o => o.MapFrom(s => s.AppUser.Followers.Any(x => x.Observer.UserName == currentUsername)));
 
             // Mapping from AppUser to Profile
             // We want to Map from AppUser to Profile
             // The Profile Contains an Image that we want to have inside
             // We will get the main Image from the User and add it to the Profile
             CreateMap<AppUser, Profiles.Profile>()
-                .ForMember(d => d.Image, o => o.MapFrom(s => s.Photos.FirstOrDefault(p => p.IsMain).Url));
+                .ForMember(d => d.Image, o => o.MapFrom(s => s.Photos.FirstOrDefault(p => p.IsMain).Url))
+                .ForMember(d => d.FollowersCount, o => o.MapFrom(s => s.Followers.Count)) // Followers Count
+                .ForMember(d => d.FollowingCount, o => o.MapFrom(s => s.Followings.Count)) // Following Count
+                .ForMember(d => d.Following, o => o.MapFrom(s => s.Followers.Any(x => x.Observer.UserName == currentUsername)));
 
             // Mapping from Comment to CommentDto
             // Taking the Display Name, UserName and Image from the AppUser one-to-one relation we have

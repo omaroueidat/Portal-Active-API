@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Application.Core;
 using AutoMapper;
+using Application.Interfaces;
+using AutoMapper.QueryableExtensions;
 
 namespace Application.Activities
 {
@@ -20,24 +22,24 @@ namespace Application.Activities
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, IMapper mapper) 
+            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor) 
             {
                 _context = context;
                 _mapper = mapper;
+                _userAccessor = userAccessor;
             }
+
+            public IUserAccessor UserAccessor { get; }
 
             public async Task<Result<List<ActivityDto>>> Handle(Query query, CancellationToken cancellationToken)
             {
                 var activities =  await _context.Activities
-                    .Include(a => a.Attendees)           
-                    .ThenInclude(aa => aa.AppUser)
-                    .ThenInclude(au => au.Photos)
+                    .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { currentUsername = _userAccessor.GetUsername() })
                     .ToListAsync();
 
-                var activitiesToReturn = _mapper.Map<List<ActivityDto>>(activities);
-
-                return Result<List<ActivityDto>>.Success(activitiesToReturn);
+                return Result<List<ActivityDto>>.Success(activities);
             }
         }
     }
