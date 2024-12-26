@@ -24,12 +24,35 @@ var app = builder.Build();
 // Adding the exeption middleware to the pipeline
 app.UseMiddleware<ExceptionMiddleware>();
 
+// Adding Secuirity Policies
+app.UseXContentTypeOptions(); // Prevents Mime Sniffing from our app.
+app.UseReferrerPolicy(opt => opt.NoReferrer()); // Control how much info the browser includes when navigating away from our app.
+app.UseXXssProtection(opt => opt.EnabledWithBlockMode()); // Prevent Xss attacks with milicous files and code on the server.
+app.UseXfo(opt => opt.Deny());
+app.UseCsp(opt => opt
+    .BlockAllMixedContent()
+    .StyleSources(s => s.Self().CustomSources("https://fonts.googleapis.com"))
+    .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com", "data:"))
+    .FormActions(s => s.Self())
+    .FrameAncestors(s => s.Self())
+    .ImageSources(s => s.Self().CustomSources("blob:", "https://res.cloudinary.com"))
+    .ScriptSources(s => s.Self())
+);
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.Use(async (context, next) =>
+    {
+        context.Response.Headers.Append("Strict-Transport-Secuirity", "max-age=31536000");
+        await next.Invoke();
+    });
 }
 
 app.UseCors("CorsPolicy");
