@@ -26,5 +26,8 @@ namespace Domain
 
         // Collection for the followers that follow the user
         public ICollection<UserFollowing> Followers { get; set; }
+
+        // Collection of Refresh Tokens
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     }
 }

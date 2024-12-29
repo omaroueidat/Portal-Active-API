@@ -36,6 +36,8 @@ namespace API.Extensions
                         IssuerSigningKey = key,
                         ValidateIssuer = false,
                         ValidateAudience = false,
+                        ValidateLifetime = true, // Token has default 5 minutes window after expiry
+                        ClockSkew = TimeSpan.Zero // Remove the above addition time
                     };
 
                     opt.Events = new JwtBearerEvents

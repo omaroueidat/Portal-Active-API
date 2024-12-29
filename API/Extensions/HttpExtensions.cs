@@ -17,9 +17,6 @@ namespace API.Extensions
 
             // Add the Pagination Header
             response.Headers.Append("Pagination", JsonSerializer.Serialize(paginationHeader));
-
-            // Expose the header to be visible by browsers
-            response.Headers.Append("Access-Control-Expose-Headers", "Pagination");
         } 
     }
 }
