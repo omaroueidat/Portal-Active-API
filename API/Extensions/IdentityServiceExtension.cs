@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Secuirity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Extensions
 {
@@ -18,11 +19,11 @@ namespace API.Extensions
             services.AddIdentityCore<AppUser>(opt =>
             {
                 opt.Password.RequireNonAlphanumeric = true;
-                opt.User.RequireUniqueEmail = true;     // Enable Unique Email
-                
-
+                opt.SignIn.RequireConfirmedEmail = true;
             })
-            .AddEntityFrameworkStores<DataContext>();
+            .AddEntityFrameworkStores<DataContext>()
+            .AddSignInManager<SignInManager<AppUser>>() // Inorder for requireConfirmedEmail to work, we need the sign in manager
+            .AddDefaultTokenProviders(); // For providing email verfication token
 
             // Key of the Jwt Issuer
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]));

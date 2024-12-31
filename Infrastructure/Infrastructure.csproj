@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="CloudinaryDotNet" Version="1.26.2" />
+    <PackageReference Include="MailerSendNetCore" Version="0.0.7" />
   </ItemGroup>
 
   <ItemGroup>

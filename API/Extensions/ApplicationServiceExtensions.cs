@@ -3,8 +3,10 @@ using Application.Core;
 using Application.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Infrastructure.Email;
 using Infrastructure.Photos;
 using Infrastructure.Secuirity;
+using MailerSendNetCore.Common.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -62,6 +64,12 @@ namespace API.Extensions
 
             // Add the service for SignalR
             services.AddSignalR();
+
+            // Add the services for Mailer Send
+            services.AddMailerSendEmailClient(config.GetSection("MailerSend"));
+
+            // Add the EmailSender Service
+            services.AddScoped<EmailSender>();
 
             return services;
         }
