@@ -71,6 +71,9 @@ namespace API.Extensions
             // Add the EmailSender Service
             services.AddScoped<EmailSender>();
 
+            // Add own Smtp Sender
+            services.AddScoped<EmailSender_ownSmtp>();
+
             return services;
         }
     }

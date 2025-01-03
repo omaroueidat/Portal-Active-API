@@ -22,15 +22,17 @@ namespace API.Controllers
         private readonly IConfiguration _config;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly EmailSender _emailSender;
+        private readonly EmailSender_ownSmtp _emailSender_OwnSmtp;
         private readonly HttpClient _httpClient;
 
-        public AccountController(UserManager<AppUser> userManager, TokenService tokenService, IConfiguration config, SignInManager<AppUser> signInManager, EmailSender emailSender)
+        public AccountController(UserManager<AppUser> userManager, TokenService tokenService, IConfiguration config, SignInManager<AppUser> signInManager, EmailSender emailSender, EmailSender_ownSmtp emailSender_OwnSmtp)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _config = config;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _emailSender_OwnSmtp = emailSender_OwnSmtp;
             _httpClient = new HttpClient
             {
                 BaseAddress = new System.Uri("https://graph.facebook.com")
@@ -100,15 +102,17 @@ namespace API.Controllers
             // Confirmation Email URL
             var verifyUrl = $"{origin}/account/verifyEmail?token={token}&email={user.Email}";
 
-            // Creating Email Variables to match the template
-            IDictionary<string, string> variables = new Dictionary<string, string>
-            {
-                {"name", user.UserName },
-                {"verify_email_url", verifyUrl }
-            };
+            //// Creating Email Variables to match the template
+            //IDictionary<string, string> variables = new Dictionary<string, string>
+            //{
+            //    {"name", user.UserName },
+            //    {"verify_email_url", verifyUrl }
+            //};
 
-            await _emailSender.SendEmail(_config["EmailProperties:EmailTemplate"], _config["EmailProperties:SenderName"],
-                _config["EmailProperties:SenderEmail"], [user.Email], "Verify your email", variables);
+            //await _emailSender.SendEmail(_config["EmailProperties:EmailTemplate"], _config["EmailProperties:SenderName"],
+            //    _config["EmailProperties:SenderEmail"], [user.Email], "Verify your email", variables);
+
+            await _emailSender_OwnSmtp.SendEmailAsync(user.Email, user.UserName, verifyUrl);
 
             return Ok("Registration success - please verify email");
         }
@@ -151,15 +155,17 @@ namespace API.Controllers
             // Confirmation Email URL
             var verifyUrl = $"{origin}/account/verifyEmail?token={token}&email={user.Email}";
 
-            // Creating Email Variables to match the template
-            IDictionary<string, string> variables = new Dictionary<string, string>
-            {
-                {"name", user.UserName },
-                {"verify_email_url", verifyUrl }
-            };
+            //// Creating Email Variables to match the template
+            //IDictionary<string, string> variables = new Dictionary<string, string>
+            //{
+            //    {"name", user.UserName },
+            //    {"verify_email_url", verifyUrl }
+            //};
 
-            await _emailSender.SendEmail(_config["EmailProperties:EmailTemplate"], _config["EmailProperties:SenderName"],
-                _config["EmailProperties:SenderEmail"], [user.Email], "Verify your email", variables);
+            //await _emailSender.SendEmail(_config["EmailProperties:EmailTemplate"], _config["EmailProperties:SenderName"],
+            //    _config["EmailProperties:SenderEmail"], [user.Email], "Verify your email", variables);
+
+            await _emailSender_OwnSmtp.SendEmailAsync(user.Email, user.UserName, verifyUrl);
 
             return Ok("Registration success - please verify email");
         }
