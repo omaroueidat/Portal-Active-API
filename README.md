@@ -18,7 +18,7 @@ https://portal-active.azurewebsites.net/
 - Added Cloud Service for Image Upload that makes our server more adjustable in size rather than having the images in the static files
 - Added a UI that guides the user for using the application
 - Added Facebook Login
-  <br> &nbsp; &nbsp; &nbsp; <h6>This feature will be working only for the testers of the app, since facebook require busimess validation for the login to be available to all facebook users, which is why you will see the error when using the login</h6>
+   &nbsp; &nbsp; &nbsp; <p>This feature will be working only for the testers of the app, since facebook require busimess validation for the login to be available to all facebook users, which is why you will see the error when using the login<p>
 - Added Email Verification Using two services:
    &nbsp; &nbsp; &nbsp; -> MailerSend which provides a trial but limited to number of differnet users to send them messages
    &nbsp; &nbsp; &nbsp; -> Gmail SMTP Server which allows my gmail to send automatic verifcation messages
