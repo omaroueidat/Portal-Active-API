@@ -95,7 +95,10 @@ namespace API.Controllers
             // Check if the email is verified
             if (user.EmailConfirmed) return BadRequest("Email is already Confirmed!");
 
-            var origin = Request.Headers["origin"];
+            
+            var origin = $"{Request.Scheme}://{Request.Host}";
+            
+            
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
@@ -148,7 +151,7 @@ namespace API.Controllers
             // Add the User to the database
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
-            var origin = Request.Headers["origin"];
+            var origin = $"{Request.Scheme}://{Request.Host}";
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
